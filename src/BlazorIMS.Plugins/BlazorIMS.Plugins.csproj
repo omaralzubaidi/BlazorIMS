@@ -1,5 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorIMS.CoreBusiness\BlazorIMS.CoreBusiness.csproj" />
+    <ProjectReference Include="..\BlazorIMS.UseCases\BlazorIMS.UseCases.csproj" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

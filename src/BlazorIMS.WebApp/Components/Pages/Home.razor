@@ -1,7 +1,29 @@
 ﻿@page "/"
+@using BlazorIMS.CoreBusiness
+@using BlazorIMS.UseCases.Inventories.interfaces
+@using Microsoft.AspNetCore.Mvc.ModelBinding.Validation
 
-<PageTitle>Home</PageTitle>
+@inject IViewInventoriesByNameUseCase viewInventoriesByNameUseCase
 
-<h1>Hello, world!</h1>
+<PageTitle>Inventories</PageTitle>
+<h1>Inventories Names</h1>
+<br />
 
-Welcome to your new app.
+@if(inventories != null && inventories.Count > 0)
+{
+    <ul>
+        @foreach(var inventory in inventories)
+        {
+          <li>@inventory.InventoryName</li>
+        }
+    </ul>
+}
+
+@code{
+    private List<Inventory>? inventories;
+
+    protected override async Task OnInitializedAsync()
+    {
+      inventories = (await viewInventoriesByNameUseCase.ExecuteAsnc()).ToList();
+    }
+}

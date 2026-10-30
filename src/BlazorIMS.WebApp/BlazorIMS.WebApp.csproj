@@ -1,5 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorIMS.UseCases\BlazorIMS.UseCases.csproj" />
+    <ProjectReference Include="..\BlazorIMS.CoreBusiness\BlazorIMS.CoreBusiness.csproj" />
+    <ProjectReference Include="..\BlazorIMS.Plugins\BlazorIMS.Plugins.csproj" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>

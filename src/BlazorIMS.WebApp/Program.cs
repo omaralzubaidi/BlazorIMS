@@ -1,3 +1,7 @@
+using BlazorIMS.Plugins;
+using BlazorIMS.UseCases.Inventories;
+using BlazorIMS.UseCases.Inventories.interfaces;
+using BlazorIMS.UseCases.PluginsInterfaces;
 using BlazorIMS.WebApp.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents();
 
+builder.Services.AddSingleton<IInventoryRepository, InventoryRepository>();
+builder.Services.AddTransient<IViewInventoriesByNameUseCase, ViewInventoriesByNameUseCase>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
