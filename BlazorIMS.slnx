@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BlazorIMS.CoreBusiness/BlazorIMS.CoreBusiness.csproj" />
+    <Project Path="src/BlazorIMS.Plugins/BlazorIMS.Plugins.csproj" />
+    <Project Path="src/BlazorIMS.UseCases/BlazorIMS.UseCases.csproj" />
+    <Project Path="src/BlazorIMS.WebApp/BlazorIMS.WebApp.csproj" />
+  </Folder>
+</Solution>
