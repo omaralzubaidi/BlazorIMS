@@ -1,0 +1,31 @@
+﻿@using BlazorIMS.CoreBusiness
+@using BlazorIMS.UseCases.Inventories.interfaces
+@using BlazorIMS.WebApp.Components.Pages
+
+@inject IViewInventoriesByNameUseCase viewInventoriesByNameUseCase
+
+
+@if(inventories is not null)
+{
+    <table class="table">
+      <thead>
+        <th>Inventory Name</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th></th>
+      </thead>
+      <tbody>
+        @foreach(var inv in inventories)
+        {
+          <InventoryListItemComponent inventory="inv"></InventoryListItemComponent>
+        }
+      </tbody>
+    </table>
+}
+@code {
+    private List<Inventory>? inventories;
+    protected override async Task OnInitializedAsync()
+    {
+      inventories = (await viewInventoriesByNameUseCase.ExecuteAsnc()).ToList();
+    }
+}
