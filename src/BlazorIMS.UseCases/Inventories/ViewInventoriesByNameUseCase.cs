@@ -14,7 +14,7 @@ public class ViewInventoriesByNameUseCase : IViewInventoriesByNameUseCase
     {
         InventoryRepository = inventoryRepository;
     }
-    public async Task<IEnumerable<Inventory>> ExecuteAsnc(string name = "")
+    public async Task<IEnumerable<Inventory>> ExecuteAsync(string name = "")
     {
        return await InventoryRepository.GetInventoriesByNameAsync(name);
     }

@@ -5,5 +5,5 @@ namespace BlazorIMS.UseCases.Inventories.interfaces;
 
 public interface IViewInventoriesByNameUseCase
 {
-   Task<IEnumerable<Inventory>> ExecuteAsnc(string name = "");
+   Task<IEnumerable<Inventory>> ExecuteAsync(string name = "");
 }
