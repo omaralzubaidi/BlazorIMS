@@ -1,4 +1,5 @@
-﻿using BlazorIMS.CoreBusiness;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using BlazorIMS.CoreBusiness;
 using BlazorIMS.UseCases.PluginsInterfaces;
 
 namespace BlazorIMS.Plugins;
@@ -35,5 +36,26 @@ public class InventoryRepository : IInventoryRepository
 
         _inventories.Add(inventory);
         return Task.CompletedTask;
+    }
+
+    public Task UpdateInventoryAsync(Inventory inventory)
+    {
+        if(_inventories.Any(i => i.InventoryId != inventory.InventoryId &&
+        i.InventoryName.Equals(inventory.InventoryName, StringComparison.OrdinalIgnoreCase)))
+        {return Task.CompletedTask;}
+
+        var invToUpdate = _inventories.FirstOrDefault(i => i.InventoryId == inventory.InventoryId);
+        if(invToUpdate is not null)
+        {
+            invToUpdate.InventoryName = inventory.InventoryName;
+            invToUpdate.Quantity = inventory.Quantity;
+            invToUpdate.Price = inventory.Price;
+        }
+        return Task.CompletedTask;
+    }
+
+    public async Task<Inventory> GetInventoriesByIdAsync(int id)
+    {
+       return await Task.FromResult(_inventories.First(i => i.InventoryId == id));
     }
 }

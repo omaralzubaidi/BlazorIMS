@@ -25,6 +25,7 @@
     <ValidationMessage For="() => inventory.Price"></ValidationMessage>
     <br>
     <button type="submit" class="btn btn-primary">Save</button>
+    &nbsp;
     <a href="/inventories" class="btn btn-primary">Cancel</a>
 </EditForm>
 @code {
@@ -37,7 +38,10 @@
     }
     private async Task Save()
     {
-       await addInventoryUseCase.ExecuteAsync(inventory);
-       navigationManager.NavigateTo("/inventories");
+        if(inventory is not null)
+        {
+            await addInventoryUseCase.ExecuteAsync(inventory);
+            navigationManager.NavigateTo("/inventories");    
+        }
     }
 }
