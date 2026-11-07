@@ -6,11 +6,17 @@
 
 <h3>Inventories List</h3>
 <br>
-
-<InventoryListComponent></InventoryListComponent>
+<SearchComponent onSearch="HandleInventorySearch"></SearchComponent>
+<br>
+<InventoryListComponent inventorySearchTerm="@searchTerm"></InventoryListComponent>
 
 <a href="/addinventory" class="btn btn-primary">Add Inventory</a>
 
 @code {
+    private string? searchTerm;
+    private async Task HandleInventorySearch(string searchTerm)
+    {
+        this.searchTerm = searchTerm;
+    }
 
 }

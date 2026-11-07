@@ -1,0 +1,25 @@
+﻿@inject NavigationManager navigationManager
+
+<EditForm Enhance="true" Model="searchFilter" FormName="formSearch" OnValidSubmit="Search">
+    <div class="input-group">
+        <InputText class="form-control" @bind-Value="searchFilter"></InputText>
+        <button type="submit" class="input-group-text btn btn-light">Search</button>
+    </div>
+
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    public string? searchFilter{get; set;}
+    protected override void OnInitialized()
+    {
+        searchFilter ??= string.Empty;
+    }
+
+    [Parameter]
+    public EventCallback<string> onSearch{get; set;}
+    public void Search()
+    {
+        onSearch.InvokeAsync(searchFilter);
+    }
+}

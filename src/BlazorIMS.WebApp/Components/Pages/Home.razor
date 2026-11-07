@@ -1,29 +1,7 @@
 ﻿@page "/"
-@using BlazorIMS.CoreBusiness
-@using BlazorIMS.UseCases.Inventories.interfaces
-@using Microsoft.AspNetCore.Mvc.ModelBinding.Validation
 
-@inject IViewInventoriesByNameUseCase viewInventoriesByNameUseCase
-
-<PageTitle>Inventories</PageTitle>
-<h1>Inventories Names</h1>
-<br />
-
-@if(inventories != null && inventories.Count > 0)
-{
-    <ul>
-        @foreach(var inventory in inventories)
-        {
-          <li>@inventory.InventoryName</li>
-        }
-    </ul>
-}
-
+<br>
+<h1>Welcome To Blazor IMS App</h1>
 @code{
-    private List<Inventory>? inventories;
 
-    protected override async Task OnInitializedAsync()
-    {
-      inventories = (await viewInventoriesByNameUseCase.ExecuteAsync()).ToList();
-    }
 }

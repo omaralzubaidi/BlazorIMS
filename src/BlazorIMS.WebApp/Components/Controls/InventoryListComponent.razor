@@ -3,7 +3,7 @@
 @using BlazorIMS.WebApp.Components.Pages
 
 @inject IViewInventoriesByNameUseCase viewInventoriesByNameUseCase
-
+@inject NavigationManager navigationManager
 
 @if(inventories is not null)
 {
@@ -23,9 +23,12 @@
     </table>
 }
 @code {
+    [Parameter]
+    public string? inventorySearchTerm{get; set;} = string.Empty;
     private List<Inventory>? inventories;
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-      inventories = (await viewInventoriesByNameUseCase.ExecuteAsync()).ToList();
+      inventories = (await viewInventoriesByNameUseCase.ExecuteAsync(inventorySearchTerm??string.Empty)).ToList();
     }
+  
 }
