@@ -1,5 +1,8 @@
 ﻿@using BlazorIMS.CoreBusiness
+@using BlazorIMS.UseCases.Inventories.interfaces
 
+@inject NavigationManager navigationManager
+@inject IDeleteInventoryUseCase deleteInventoryUseCase
 @if(inventory is not null)
 {
     <tr>
@@ -9,6 +12,14 @@
         <td>
             <a href="/editinventory/@inventory.InventoryId" class="btn btn-light">Edit</a>
         </td>
+        <td>
+            <EditForm Enhance
+            Model="inventory"
+            FormName="@($"form-delete-{inventory.InventoryId}")"
+            OnValidSubmit="() => HandleDelete(inventory.InventoryId)">
+            <button type="submit" class="btn btn-light">Delete</button>
+            </EditForm>
+        </td>
     </tr>
 }
     
@@ -16,4 +27,9 @@
 @code{
     [Parameter]
     public Inventory? inventory{get; set;}
+    private async Task HandleDelete(int inventoryId)
+    {
+      await deleteInventoryUseCase.ExecuteAsync(inventoryId);
+      navigationManager.Refresh();
+    }
 }

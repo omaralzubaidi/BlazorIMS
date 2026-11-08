@@ -9,4 +9,5 @@ public interface IInventoryRepository
     Task UpdateInventoryAsync(Inventory inventory);
     Task<Inventory> GetInventoriesByIdAsync(int id);
     Task<IEnumerable<Inventory>> GetInventoriesByNameAsync(string name);
+    Task DeleteInventoryAsync(int inventoryId);
 }

@@ -31,8 +31,15 @@ public class InventoryRepository : IInventoryRepository
         if(_inventories.Any(i => i.InventoryName.Equals(inventory.InventoryName, StringComparison.OrdinalIgnoreCase)))
           {return Task.CompletedTask;}
         
-        var maxId = _inventories.Max(i => i.InventoryId);
-        inventory.InventoryId = maxId + 1;
+        if(_inventories is null || _inventories.Count<1)
+        {
+            inventory.InventoryId = 1;
+        }
+        else
+        {
+            var maxId = _inventories.Max(i => i.InventoryId);
+            inventory.InventoryId = maxId + 1;
+        }
 
         _inventories.Add(inventory);
         return Task.CompletedTask;
@@ -57,5 +64,15 @@ public class InventoryRepository : IInventoryRepository
     public async Task<Inventory> GetInventoriesByIdAsync(int id)
     {
        return await Task.FromResult(_inventories.First(i => i.InventoryId == id));
+    }
+
+    public Task DeleteInventoryAsync(int inventoryId)
+    {
+        var invToDelete = _inventories.FirstOrDefault(i => i.InventoryId == inventoryId);
+        if(invToDelete is not null)
+        {
+            _inventories.Remove(invToDelete);
+        }
+        return Task.CompletedTask;
     }
 }
