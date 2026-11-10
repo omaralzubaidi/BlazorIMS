@@ -1,0 +1,35 @@
+﻿@using BlazorIMS.CoreBusiness
+@using BlazorIMS.UseCases.Products.interfaces
+
+@inject IViewProductsByNameUseCase viewProductsByNameUseCase
+
+@if(products is not null)
+{
+  <table class="table">
+    <thead>
+        <th>Product Name</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th></th>
+        <th></th>
+    </thead>
+    <tbody>
+        @foreach(var product in products)
+        {
+           <ProductListItemComponent @rendermode="InteractiveServer" product="product"></ProductListItemComponent>    
+        }
+    </tbody>
+  </table>
+}
+
+@code {
+    private List<Product>? products;
+
+    [Parameter]
+    public string? productSearchTerm{get; set;}
+
+    protected override async Task OnParametersSetAsync()
+    {
+        products = (await viewProductsByNameUseCase.ExecuteAsync(productSearchTerm??string.Empty)).ToList();
+    }
+}

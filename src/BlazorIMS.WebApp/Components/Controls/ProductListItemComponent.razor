@@ -1,0 +1,31 @@
+﻿@using BlazorIMS.CoreBusiness
+@using BlazorIMS.UseCases.Products.interfaces
+
+@inject NavigationManager navigationManager
+
+@inject IDeleteProductUseCase deleteProductUseCase
+
+@if(product is not null)
+{
+    <tr>
+        <td>@product.ProductName</td>
+        <td>@product.Quantity</td>
+        <td>@product.Price</td>
+        <td><a href="/editproduct" class="btn btn-light">Edit</a></td>
+        <td><button type="button" class="btn btn-light" @onclick="DeleteProduct">Delete</button></td>
+    </tr>
+}
+
+@code {
+    [Parameter]
+    public Product? product {get; set;}
+
+    private async Task DeleteProduct()
+    {
+        if(product is not null)
+        {
+            await deleteProductUseCase.ExecuteAsync(product.ProductId);
+            navigationManager.Refresh();
+        }
+    }
+}
