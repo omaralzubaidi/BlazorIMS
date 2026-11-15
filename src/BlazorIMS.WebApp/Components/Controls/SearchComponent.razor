@@ -1,9 +1,9 @@
 ﻿@inject NavigationManager navigationManager
 
-<EditForm Enhance="true" Model="searchFilter" FormName="formSearch" OnValidSubmit="Search">
+<EditForm Enhance="true" Model="searchFilter" FormName="formSearch" onsubmit="Search">
     <div class="input-group">
         <InputText class="form-control" @bind-Value="searchFilter"></InputText>
-        <button type="submit" class="input-group-text btn btn-light">Search</button>
+        <button type="submit" class="input-group-text btn btn-success">Search</button>
     </div>
 
 </EditForm>

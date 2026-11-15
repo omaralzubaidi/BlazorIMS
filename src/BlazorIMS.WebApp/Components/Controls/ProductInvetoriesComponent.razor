@@ -1,0 +1,51 @@
+﻿@using System.Security.AccessControl
+@using BlazorIMS.CoreBusiness
+@using BlazorIMS.Plugins
+
+<SearchProductInventoriesComponent onAddInventory="HandleAddInventory"></SearchProductInventoriesComponent>
+
+@if(product is not null && product.productInventories is not null && product.productInventories.Count > 0)
+{
+<div class="card">
+    <div class="card-body">
+   <table class="table">
+    <thead>
+        <tr>
+            <th>Inventory Name</th>
+            <th>Quantity</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach(var productInventory in product.productInventories)
+            {
+                <tr>
+                <td>@productInventory.Inventory?.InventoryName</td>
+                <td>
+                    <input type="number" min="0" @bind-value="productInventory.InventoryQuantity"/>
+                </td>    
+                <td>
+                    <button type="button" class="btn btn-link"
+                    @onclick="@(()=>{RemoveInventory(productInventory);})">Remove</button>
+                </td>
+                </tr>
+
+            }
+    </tbody>
+   </table>
+    </div>
+</div>
+}
+@code {
+    [Parameter]
+    public Product? product{get;set;}
+
+    private void RemoveInventory(ProductInventories productInventory)
+    {
+        product?.RemoveInventory(productInventory);
+    }
+    private void HandleAddInventory(Inventory inventory)
+    {
+        product?.AddInventory(inventory);
+    }
+}

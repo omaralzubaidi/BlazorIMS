@@ -21,7 +21,19 @@ public class ProductRepository : IProductRepository
     }
     public Task AddProductAsync(Product product)
     {
-        throw new NotImplementedException();
+        if(product is null) return Task.CompletedTask;
+
+        if(_products is null || _products.Count<1)
+        {
+            product.ProductId = 1;
+        }
+        else
+        {
+            var maxId = _products.Max(p => p.ProductId);
+            product.ProductId = maxId + 1;
+        }
+        _products.Add(product);
+        return Task.CompletedTask;
     }
 
     public async Task DeleteProductAsync(int productId)
@@ -34,10 +46,13 @@ public class ProductRepository : IProductRepository
         await Task.CompletedTask;
     }
 
-    public Task<Product> GetProductsByIdAsync(int id)
+    public async Task<Product> GetProductsByIdAsync(int id)
     {
-        throw new NotImplementedException();
-    }
+        var product = _products?.FirstOrDefault(p => p.ProductId == id);
+
+        return await Task.FromResult(product??new Product());
+    
+    }    
 
     public async Task<IEnumerable<Product>> GetProductsByNameAsync(string name)
     {
@@ -50,6 +65,17 @@ public class ProductRepository : IProductRepository
 
     public Task UpdateProductAsync(Product product)
     {
-        throw new NotImplementedException();
+        if(_products.Any(p => p.ProductId != product.ProductId &&
+        p.ProductName.Equals(product.ProductName, StringComparison.OrdinalIgnoreCase)))
+          return Task.CompletedTask;
+        
+        var productToUpdate = _products.FirstOrDefault(p => p.ProductId == product.ProductId);
+        if(productToUpdate is not null)
+        {
+           productToUpdate.ProductName = product.ProductName;
+           productToUpdate.Quantity = product.Quantity;
+           productToUpdate.Price = product.Price;
+        }
+        return Task.CompletedTask;
     }
 }

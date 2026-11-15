@@ -1,10 +1,22 @@
 ﻿@page "/products"
+
+@rendermode InteractiveServer
+
 @using BlazorIMS.WebApp.Components.Controls
 <h3>Product List</h3>
 <br>
-<ProductListComponent></ProductListComponent>
+<SearchComponent onSearch="HandleSearch"></SearchComponent>
+<br>
+<ProductListComponent productSearchTerm="@searchTerm"></ProductListComponent>
 <br>
 <a href="/addproduct" class="btn btn-primary">Add Product</a>
-@code {
 
+@code {
+    private string? searchTerm;
+
+    private void HandleSearch(string searchTerm)
+    {
+       this.searchTerm = searchTerm;
+       StateHasChanged();
+    }
 }

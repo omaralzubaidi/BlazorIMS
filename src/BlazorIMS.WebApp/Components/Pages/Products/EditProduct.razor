@@ -1,7 +1,55 @@
-﻿@page "/editproduct"
+﻿@page "/editproduct/{idProduct:int}"
+@using BlazorIMS.CoreBusiness
+@using BlazorIMS.UseCases.Products.interfaces
+
+@inject IEditProductUseCase editProductUseCase
+@inject IViewProductByIdUseCase viewProductByIdUseCase
+@inject NavigationManager navigationManager
 
 <h3>EditProduct</h3>
 
-@code {
+<EditForm Enhance="true" Model="product" FormName="EditProductForm" OnValidSubmit="Update">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
 
+    <label for="productname"></label>
+    <InputText id="productname" class="form-control" @bind-Value="product!.ProductName"></InputText>
+    <ValidationMessage For="@(() => product.ProductName)"></ValidationMessage>
+
+    <InputNumber @bind-Value="product.ProductId" hidden></InputNumber>
+
+    <label for="quantity"></label>
+    <InputNumber id="quantity" class="form-control" @bind-Value="product.Quantity"></InputNumber>
+    <ValidationMessage For="@(() => product.Quantity)"></ValidationMessage>
+
+    <label for="price"></label>
+    <InputNumber id="price" class="form-control" @bind-Value="product.Price"></InputNumber>
+    <ValidationMessage For="@(() => product.Price)"></ValidationMessage>
+    <br />
+    <button type="submit" class="btn btn-primary">Update</button>
+    &nbsp;
+    <a href="/products" class="btn btn-primary">Cancel</a>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private Product? product{get; set;}
+    [Parameter]
+    public int idProduct{get; set;}
+    protected override async Task OnInitializedAsync()
+    {
+        product ??= await viewProductByIdUseCase.ExecuteAsync(idProduct);
+        if(product is null)
+        {
+            navigationManager.NotFound();
+        }
+    }
+    private async Task Update()
+    {
+        if(product is not null)
+        {
+            await editProductUseCase.ExecuteAsync(product);
+            navigationManager.NavigateTo("/products");
+        }
+    }
 }
+

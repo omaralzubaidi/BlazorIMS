@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using BlazorIMS.Plugins;
 
 namespace BlazorIMS.CoreBusiness;
 
@@ -16,5 +17,29 @@ public class Product
    
    [Range(0, 1000000, ErrorMessage = "Price must be greator or equal to 0")]
    public double Price{get; set;}
+
+   public List<ProductInventories> productInventories = new List<ProductInventories>();
+
+   public void AddInventory(Inventory inventory)
+   {
+      if(!productInventories.Any(pi=> pi.Inventory is not null && pi.Inventory.InventoryName.Equals(inventory.InventoryName, StringComparison.OrdinalIgnoreCase)))
+      {
+         productInventories.Add(new ProductInventories
+         {
+            ProductId = this.ProductId,
+            Product = this,
+            Inventory = inventory, 
+            InventoryId = inventory.InventoryId, 
+            InventoryQuantity = 1
+         }
+         );
+         
+      }
+   }
+
+   public void RemoveInventory(ProductInventories productInventories)
+   {
+      this.productInventories.Remove(productInventories);
+   }
 }
 

@@ -1,7 +1,50 @@
 ﻿@page "/addproduct"
 
-<h3>AddProduct</h3>
+@rendermode InteractiveServer
+
+@using BlazorIMS.CoreBusiness
+@using BlazorIMS.UseCases.Products.interfaces
+@using BlazorIMS.WebApp.Components.Controls
+
+@inject IAddProductUseCase addProductUseCase
+@inject NavigationManager navigationManager
+
+<h3>Add Product</h3>
+
+<EditForm Model="product" OnValidSubmit="Save">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+
+    <label for="productname">Name</label>
+    <InputText id="productname" class="form-control" @bind-Value="product!.ProductName"></InputText>
+    <ValidationMessage For="@(() => product.ProductName)"></ValidationMessage>
+
+    <label for="quantity">Quantity</label>
+    <InputNumber id="quantity" class="form-control" @bind-Value="product.Quantity"></InputNumber>
+    <ValidationMessage For="@(() => product.Quantity)"></ValidationMessage>
+
+    <label for="price">Price</label>
+    <InputNumber id="price" class="form-control" @bind-Value="product.Price"></InputNumber>
+    <ValidationMessage For="@(() => product.Price)"></ValidationMessage>
+    <label>Inventories</label>
+    <ProductInvetoriesComponent product="@product"></ProductInvetoriesComponent>
+    <br />
+    <button type="submit" class="btn btn-primary">Save</button>
+    &nbsp;
+    <a href="/products" class="btn btn-primary">Cancel</a>
+</EditForm>
 
 @code {
-
+    private Product? product{get; set;}
+    protected override void OnInitialized()
+    {
+        product ??= new Product();
+    }
+    private async Task Save()
+    {
+        if(product is not null)
+        {
+            await addProductUseCase.ExecuteAsync(product);
+            navigationManager.NavigateTo("/products");
+        }
+    }
 }

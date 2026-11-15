@@ -1,0 +1,48 @@
+﻿@using BlazorIMS.CoreBusiness
+@using BlazorIMS.UseCases.Inventories
+@using BlazorIMS.UseCases.Inventories.interfaces
+
+@inject IViewInventoriesByNameUseCase viewInventoriesByNameUseCase
+<div class="input-group">
+    <input class="form-control" @bind-value="searchTerm" @bind-value:event="oninput"/>
+    <button type="button" class="btn btn-success input-group-text"
+    @onclick="Search">Search</button>
+</div>
+@if(inventories is not null && inventories.Count > 0)
+{
+  <ul style="list-style-type: none; overflow-y: auto; maxlength:300px; border: 1px solid silver; padding-top: 5px;">
+        @foreach(var inv in inventories)
+        {
+            <li @key="inv.InventoryId" style="cursor: pointer;" @onclick="@(() => {AddProductInventory(inv);})">
+                @inv.InventoryName
+            </li>
+        }
+  </ul>
+}
+
+@code {
+    [Parameter]
+    public EventCallback<Inventory> onAddInventory{get;set;}
+    private string _searchTerm;
+    private string? searchTerm
+    {
+        get => _searchTerm;
+        set
+        {
+            _searchTerm = value;
+            Search();
+        } 
+    }
+    private List<Inventory> inventories = new List<Inventory>();
+    private async Task Search()
+    {
+        inventories = (await viewInventoriesByNameUseCase.ExecuteAsync(this.searchTerm??string.Empty)).ToList();
+        StateHasChanged();
+    }
+
+    private void AddProductInventory(Inventory inventory)
+    {
+       onAddInventory.InvokeAsync(inventory);
+       inventories.Clear();
+    }
+}
