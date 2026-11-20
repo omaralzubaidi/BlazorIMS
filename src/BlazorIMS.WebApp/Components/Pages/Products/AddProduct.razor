@@ -25,6 +25,7 @@
     <label for="price">Price</label>
     <InputNumber id="price" class="form-control" @bind-Value="product.Price"></InputNumber>
     <ValidationMessage For="@(() => product.Price)"></ValidationMessage>
+    <ValidationMessage For="@(() => product.productInventories)"></ValidationMessage>
     <label>Inventories</label>
     <ProductInvetoriesComponent product="@product"></ProductInvetoriesComponent>
     <br />

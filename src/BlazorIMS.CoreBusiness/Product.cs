@@ -1,6 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using BlazorIMS.Plugins;
+using BlazorIMS.CoreBusiness.Validations;
 
 namespace BlazorIMS.CoreBusiness;
 
@@ -18,7 +20,8 @@ public class Product
    [Range(0, 1000000, ErrorMessage = "Price must be greator or equal to 0")]
    public double Price{get; set;}
 
-   public List<ProductInventories> productInventories = new List<ProductInventories>();
+   [Product_EnsurePriceGreaterThanInventoriesCost]
+   public List<ProductInventories> productInventories {get; set;} = new List<ProductInventories>();
 
    public void AddInventory(Inventory inventory)
    {
