@@ -40,7 +40,7 @@
     [Parameter]
     public Product? product{get;set;}
 
-    private void RemoveInventory(ProductInventories productInventory)
+    private void RemoveInventory(ProductInventory productInventory)
     {
         product?.RemoveInventory(productInventory);
     }

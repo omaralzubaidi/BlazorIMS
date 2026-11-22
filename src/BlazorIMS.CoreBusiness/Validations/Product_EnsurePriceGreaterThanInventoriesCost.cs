@@ -12,7 +12,6 @@ public class Product_EnsurePriceGreaterThanInventoriesCost : ValidationAttribute
         {
            if(!ValidatePrice(product))
             {
-                Console.WriteLine($" hello baby {ValidatePrice(product)}");
                 return new ValidationResult($"The product's price is less than inventories cost {TotalInventoriesCost(product).ToString("c")}!", 
                 new List<string>(){validationContext.MemberName});
             }

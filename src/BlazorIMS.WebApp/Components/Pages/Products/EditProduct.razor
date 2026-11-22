@@ -1,21 +1,23 @@
 ﻿@page "/editproduct/{idProduct:int}"
 @using BlazorIMS.CoreBusiness
 @using BlazorIMS.UseCases.Products.interfaces
+@using BlazorIMS.WebApp.Components.Controls
 
+@rendermode InteractiveServer
 @inject IEditProductUseCase editProductUseCase
 @inject IViewProductByIdUseCase viewProductByIdUseCase
 @inject NavigationManager navigationManager
 
 <h3>EditProduct</h3>
 
-<EditForm Enhance="true" Model="product" FormName="EditProductForm" OnValidSubmit="Update">
+<EditForm Model="product" OnValidSubmit="Update">
     <DataAnnotationsValidator></DataAnnotationsValidator>
 
-    <label for="productname"></label>
-    <InputText id="productname" class="form-control" @bind-Value="product!.ProductName"></InputText>
-    <ValidationMessage For="@(() => product.ProductName)"></ValidationMessage>
+    <InputNumber @bind-Value="product!.ProductId" hidden></InputNumber>
 
-    <InputNumber @bind-Value="product.ProductId" hidden></InputNumber>
+    <label for="productname"></label>
+    <InputText id="productname" class="form-control" @bind-Value="product.ProductName"></InputText>
+    <ValidationMessage For="@(() => product.ProductName)"></ValidationMessage>
 
     <label for="quantity"></label>
     <InputNumber id="quantity" class="form-control" @bind-Value="product.Quantity"></InputNumber>
@@ -24,6 +26,9 @@
     <label for="price"></label>
     <InputNumber id="price" class="form-control" @bind-Value="product.Price"></InputNumber>
     <ValidationMessage For="@(() => product.Price)"></ValidationMessage>
+    <ValidationMessage For="@(() => product.productInventories)"></ValidationMessage>
+    <label>Inventories</label>
+    <ProductInvetoriesComponent product="@product"></ProductInvetoriesComponent>
     <br />
     <button type="submit" class="btn btn-primary">Update</button>
     &nbsp;
@@ -31,17 +36,16 @@
 </EditForm>
 
 @code {
-    [SupplyParameterFromForm]
     private Product? product{get; set;}
     [Parameter]
     public int idProduct{get; set;}
-    protected override async Task OnInitializedAsync()
+    protected async override void OnParametersSet()
     {
         product ??= await viewProductByIdUseCase.ExecuteAsync(idProduct);
         if(product is null)
         {
             navigationManager.NotFound();
-        }
+        }    
     }
     private async Task Update()
     {

@@ -5,7 +5,7 @@ using BlazorIMS.CoreBusiness;
 
 namespace BlazorIMS.Plugins;
 
-public class ProductInventories
+public class ProductInventory
 { 
    public int ProductId{get; set;}
    [JsonIgnore]

@@ -21,13 +21,13 @@ public class Product
    public double Price{get; set;}
 
    [Product_EnsurePriceGreaterThanInventoriesCost]
-   public List<ProductInventories> productInventories {get; set;} = new List<ProductInventories>();
+   public List<ProductInventory> productInventories {get; set;} = new List<ProductInventory>();
 
    public void AddInventory(Inventory inventory)
    {
       if(!productInventories.Any(pi=> pi.Inventory is not null && pi.Inventory.InventoryName.Equals(inventory.InventoryName, StringComparison.OrdinalIgnoreCase)))
       {
-         productInventories.Add(new ProductInventories
+         productInventories.Add(new ProductInventory
          {
             ProductId = this.ProductId,
             Product = this,
@@ -40,7 +40,7 @@ public class Product
       }
    }
 
-   public void RemoveInventory(ProductInventories productInventories)
+   public void RemoveInventory(ProductInventory productInventories)
    {
       this.productInventories.Remove(productInventories);
    }

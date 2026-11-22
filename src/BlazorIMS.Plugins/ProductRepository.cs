@@ -1,6 +1,8 @@
 using System;
+using System.Net;
 using BlazorIMS.CoreBusiness;
 using BlazorIMS.UseCases.PluginsInterfaces;
+using Microsoft.VisualBasic;
 
 namespace BlazorIMS.Plugins;
 
@@ -49,9 +51,41 @@ public class ProductRepository : IProductRepository
     public async Task<Product> GetProductsByIdAsync(int id)
     {
         var product = _products?.FirstOrDefault(p => p.ProductId == id);
-
-        return await Task.FromResult(product??new Product());
-    
+        Product? newprod = null;
+        if(product is not null)
+        {
+            newprod = new Product()
+            {
+              ProductId = product.ProductId,
+              ProductName = product.ProductName, 
+              Quantity = product.Quantity,
+              Price = product.Price,
+              productInventories = new List<ProductInventory>()
+            };
+            if(product.productInventories is not null || product.productInventories.Count > 0)
+            {
+               foreach(var productInventory in product.productInventories)
+               {
+                  ProductInventory newProductInventory = new ProductInventory()
+                  {
+                    Product = productInventory.Product, 
+                    ProductId = productInventory.ProductId, 
+                    InventoryId = productInventory.InventoryId, 
+                    InventoryQuantity = productInventory.InventoryQuantity, 
+                    Inventory = new Inventory()
+                  };
+                  if(productInventory.Inventory is not null)
+                  {
+                    newProductInventory.Inventory.InventoryId = productInventory.Inventory.InventoryId;   
+                    newProductInventory.Inventory.InventoryName = productInventory.Inventory.InventoryName;      
+                    newProductInventory.Inventory.Quantity = productInventory.Inventory.Quantity;      
+                    newProductInventory.Inventory.Price = productInventory.Inventory.Price;         
+                  }
+                  newprod.productInventories.Add(newProductInventory);
+               }      
+            }
+        }
+        return await Task.FromResult(newprod);
     }    
 
     public async Task<IEnumerable<Product>> GetProductsByNameAsync(string name)
@@ -66,7 +100,7 @@ public class ProductRepository : IProductRepository
     public Task UpdateProductAsync(Product product)
     {
         if(_products.Any(p => p.ProductId != product.ProductId &&
-        p.ProductName.Equals(product.ProductName, StringComparison.OrdinalIgnoreCase)))
+        p.ProductName.ToLower().Equals(product.ProductName.ToLower(), StringComparison.OrdinalIgnoreCase)))
           return Task.CompletedTask;
         
         var productToUpdate = _products.FirstOrDefault(p => p.ProductId == product.ProductId);
@@ -75,6 +109,7 @@ public class ProductRepository : IProductRepository
            productToUpdate.ProductName = product.ProductName;
            productToUpdate.Quantity = product.Quantity;
            productToUpdate.Price = product.Price;
+           productToUpdate.productInventories = product.productInventories;
         }
         return Task.CompletedTask;
     }
