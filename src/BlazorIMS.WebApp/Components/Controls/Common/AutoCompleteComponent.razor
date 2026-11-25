@@ -1,0 +1,95 @@
+﻿<div class="form-group">
+    <label for="userinput">@Label</label>
+    <input id="userinput"
+           @bind-value="userInput"
+           @bind-value:event="oninput"
+           @onkeydown="OnKeyDown"
+           class="form-control"/>
+</div>
+    @if(searchResult is not null && searchResult.Count > 0)
+    {
+        <div class="search-result">
+            <ul>
+            @{
+               int index = 0;
+               foreach(var item in searchResult)
+               {
+                  <li @key="@item.Id" @onclick="() => HandleSelectedItem(item)" class="@(index == currentItemIndex?"selected":"")">
+                   @item.Name
+                  </li>
+                  index++;
+               }
+            }
+           </ul>
+        </div>
+    }
+
+@code {
+    [Parameter]
+    public string Label{get; set;} = string.Empty;
+    [Parameter]
+    public Func<string, List<ItemViewModle>>? SearchFunction{get;set;}
+    [Parameter]
+    public EventCallback<ItemViewModle> onSelectedItem{get; set;}
+    private List<ItemViewModle>? searchResult = null;
+    private ItemViewModle? selectedItem = null;
+    private ItemViewModle? currentItem = null;
+    private int currentItemIndex = -1;
+    private string _userInput = string.Empty;
+    private string userInput{
+        get => _userInput;
+        set
+        {
+            _userInput = value;
+            if(!string.IsNullOrWhiteSpace(userInput) && SearchFunction is not null)
+            {
+                searchResult = SearchFunction(userInput);
+            }
+        }
+    } 
+
+    private void HandleSelectedItem(ItemViewModle item)
+    {
+        HandleHighliting();
+        this.selectedItem = item;
+        this.userInput = item?.Name??string.Empty;
+        this.searchResult = null;
+        onSelectedItem.InvokeAsync(item);
+    }
+    private void OnKeyDown(KeyboardEventArgs e)
+    {
+        if(searchResult is not null && searchResult.Count > 0 && (e.Key == "ArrowDown" || e.Key == "ArrowUp"))
+        {
+            if(e.Key == "ArrowDown" && currentItemIndex < searchResult.Count -1)
+            {
+                currentItem = searchResult[++currentItemIndex];
+            }
+            else if(e.Key == "ArrowUp")
+            {
+                if(currentItemIndex > 0)
+                    currentItem = searchResult[--currentItemIndex]; 
+                else
+                {
+                    currentItem = null;
+                    currentItemIndex = -1;
+                }       
+            }
+        }
+        else if(e.Key == "Enter")
+        {
+            HandleSelectedItem(currentItem);
+        }
+    }
+
+    private void HandleHighliting()
+    {
+       currentItem = null;
+       currentItemIndex = -1;
+    }
+    public class ItemViewModle
+    {
+        public int Id{get; set;}
+        public string Name{get; set;} = string.Empty;
+    }
+
+}
